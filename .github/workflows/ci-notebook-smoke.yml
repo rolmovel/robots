@@ -1,0 +1,30 @@
+name: CI - Notebook Smoke
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  notebook-smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Create venv and install
+        run: |
+          python -m venv .venv
+          . .venv/bin/activate
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r curso/requirements.txt
+          pip install -r curso/requirements-dev.txt
+      - name: Execute example notebook
+        run: |
+          . .venv/bin/activate
+          python -m nbconvert --to notebook --execute curso/capitulo-00-fundamentos/notebooks/00_intro_openbb.ipynb --ExecutePreprocessor.timeout=600 --output /tmp/00_intro_executed.ipynb
