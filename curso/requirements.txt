@@ -1,7 +1,6 @@
 openbb>=4.0,<5.0
 backtesting==0.3.3
-# Use wheel hosted by pandas-ta site compatible with Python 3.11
-# Use legacy tarball compatible with Python 3.11
+# pandas-ta 0.3.14b: tarball from official site, compatible with Python 3.11
 pandas-ta @ https://www.pandas-ta.dev/assets/zip/pandas_ta-0.3.14b.tar.gz
 pandas>=2.0,<3.0
 numpy>=1.24,<2.0

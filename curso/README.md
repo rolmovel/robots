@@ -54,21 +54,37 @@ Cap 07: Orquestación → Walk-forward → Automatización
 
 ## Instalación
 
+### Opción recomendada (script automático)
+
 ```bash
-# Clonar repositorio
-git clone <repo-url>
-cd curso
+git clone https://github.com/rolmovel/robots
+cd robots
 
-# Crear entorno virtual
-python -m venv .venv
-source .venv/bin/activate  # macOS/Linux
+chmod +x scripts/setup_env.sh
+./scripts/setup_env.sh python3.11 .venv
+source .venv/bin/activate
 
-# Instalar dependencias
-pip install -r requirements.txt
-
-# Lanzar JupyterLab
 jupyter lab
 ```
+
+### Opción manual
+
+```bash
+git clone https://github.com/rolmovel/robots
+cd robots
+
+python3.11 -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+pip install --upgrade pip setuptools wheel
+pip install -r curso/requirements.txt
+
+jupyter lab
+```
+
+> **Importante**: Se requiere Python 3.11. Versiones 3.12+ no son compatibles
+> con todas las dependencias actuales. Ver
+> [quickstart](specs/001-curso-inversion-openbb/quickstart.md) para detalles
+> sobre `pkg_resources` y resolución de problemas.
 
 ---
 
@@ -98,7 +114,7 @@ El directorio `lib/` contiene funciones reutilizables para todos los capítulos:
 
 ## Requisitos
 
-- Python 3.11+
+- **Python 3.11** (obligatorio; 3.12+ no compatible con todas las dependencias)
 - Cuenta OpenBB (opcional, para datos premium)
 - JupyterLab
 
