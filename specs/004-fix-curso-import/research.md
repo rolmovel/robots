@@ -5,53 +5,71 @@
 
 ## Problem
 
-Notebooks in `curso/` import internal modules via `from curso.lib.data import ...`.
-When running notebooks outside the repository root or without installing the repo,
-Python cannot find the `curso` package and raises `ModuleNotFoundError`.
+Two import failures affect notebooks in `curso/`:
+
+1. **Original**: `ModuleNotFoundError: No module named 'curso'` — the `curso` package was not
+   importable because the repo wasn't installed as a Python package.
+2. **Current (blocking)**: `ModuleNotFoundError: No module named 'pkg_resources'` — triggered
+   when `curso/lib/indicators.py` imports `pandas_ta`, which does
+   `from pkg_resources import get_distribution` in its `__init__.py`.
+
+### Root Cause Analysis (pkg_resources)
+
+- `pandas_ta` 0.3.14b uses `pkg_resources` (from `setuptools`) at import time.
+- `setuptools` 78+ removed `pkg_resources` as a standalone importable module.
+- The current venv has `setuptools==82.0.1` installed (via `pip install --upgrade pip setuptools wheel` in `setup_env.sh`), which no longer provides `pkg_resources`.
+- A shim workaround exists in `setup_env.sh` but does not work reliably.
 
 ## Options considered
 
-### Option A — Install repository as a package (recommended)
+### Option A — Pin setuptools<72 (recommended)
 
-- Action: Add minimal packaging metadata (`pyproject.toml`, `setup.cfg`) and update
-  `scripts/setup_env.sh` to `pip install -e .` inside the venv.
+- Action: Pin `setuptools<72` in `curso/requirements.txt` and in the `setup_env.sh` upgrade step.
 - Pros:
-  - Explicit and standard Python packaging approach.
-  - Works in JupyterLab and any Python execution context (scripts, tests, CI).
-  - No changes required to notebooks.
+  - `pkg_resources` is fully available in setuptools <72.
+  - No changes to `pandas_ta` or notebooks.
+  - Simple, reversible constraint.
 - Cons:
-  - Adds a small packaging overhead during setup (editable install).
+  - Pins an older setuptools; acceptable since only needed for `pandas_ta` compatibility.
 
-### Option B — Modify `scripts/setup_env.sh` to export `PYTHONPATH` on activation
+### Option B — Install separate `setuptools-pkg-resources` shim package
 
-- Action: When creating the venv, write an activation hook or echo instructions to
-  set `PYTHONPATH=$PWD` on activation.
+- Action: Install a third-party compatibility package.
 - Pros:
-  - Simple to implement.
-  - No packaging metadata required.
+  - Keeps setuptools modern.
 - Cons:
-  - Less explicit (relies on environment vars), can be confusing to users.
-  - Some tools (e.g., editors) may not pick up `PYTHONPATH` consistently.
+  - No official package exists for this; unreliable third-party sources.
 
-### Option C — Add path hacks in notebooks (`sys.path.append(...)`)
+### Option C — Patch pandas_ta locally to use importlib.metadata
 
-- Action: Add a cell at the top of notebooks to insert the repo root into `sys.path`.
+- Action: Monkey-patch or fork pandas_ta to replace `pkg_resources` with `importlib.metadata`.
 - Pros:
-  - Quick, simple, guaranteed to work locally.
+  - Uses modern stdlib.
 - Cons:
-  - Pollutes notebooks with environment-specific code.
-  - Not acceptable per spec (we want no notebook edits).
+  - Requires maintaining a fork/patch; fragile across updates.
+
+### Option D — Install repository as editable package (already done)
+
+- Action: `pip install -e .` (already implemented in previous iteration).
+- Pros:
+  - Makes `curso` importable.
+- Cons:
+  - Does NOT fix the `pkg_resources` issue (separate problem).
 
 ## Decision
 
-Choose Option A: Add packaging metadata and perform an editable install in `setup_env.sh`.
+Choose Option A + D combined:
+1. **Pin `setuptools<72`** in requirements and setup script to restore `pkg_resources`.
+2. **Keep editable install** (`pip install -e .`) for `curso` importability.
+3. **Remove the fragile shim** workaround from `setup_env.sh`.
 
-**Rationale**: It's the most robust and standard solution; it avoids editing notebooks and works across editors, CI, and interactive sessions.
+**Rationale**: Pinning setuptools is the minimal change that restores compatibility with `pandas_ta` 0.3.14b while keeping the existing packaging setup intact. The shim was unreliable and should be replaced by a proper version constraint.
 
 ## Implementation notes
 
-- Create `pyproject.toml` with `setuptools` build backend.
-- Create `setup.cfg` with `packages = find:` so `curso` is installed.
-- Update `scripts/setup_env.sh` to run `pip install -e .` after installing requirements.
-- Update CI to verify `import curso` in the install-check job.
+- Update `curso/requirements.txt`: add `setuptools<72` as explicit dependency.
+- Update `scripts/setup_env.sh`: change `pip install --upgrade pip setuptools wheel` to `pip install --upgrade pip "setuptools<72" wheel`.
+- Remove the `pkg_resources` shim script from `setup_env.sh`.
+- Verify: `curso/.venv/bin/python -c "import pkg_resources; print('OK')"` passes.
+- Verify: notebook chapter 01 executes without `ModuleNotFoundError`.
 

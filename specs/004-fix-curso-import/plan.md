@@ -1,174 +1,97 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Fix `curso` import (pkg_resources)
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
-
-## Summary
-
-[Extract from feature spec: primary requirement + technical approach from research]
-
-## Technical Context
-
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
-
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
-
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
-
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
-
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
-
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
-
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
-
-## Constitution Check
-
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
-
-- Spec-First Delivery: `spec.md` includes prioritized stories, requirements, assumptions,
-  edge cases, and measurable outcomes.
-- Independent Value Slices: User stories are independently implementable and testable.
-- Verifiable Outcomes: Each story has acceptance scenarios and a reproducible validation method.
-- Traceable Artifacts: Planned work maps directly to stories and target file paths.
-- Minimal, Explicit Change: Added complexity includes documented rationale in this plan.
-
-## Project Structure
-
-### Documentation (this feature)
-
-```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
-```
-
-### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
-
-```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-
-# Implementation Plan: Fix `curso` import (specs/004-fix-curso-import)
-
-**Branch**: `004-fix-curso-import` | **Date**: 2026-05-29 | **Spec**: [spec.md](spec.md)
+**Branch**: `docs/update-readme-install` | **Date**: 2026-05-29 | **Spec**: [spec.md](spec.md)
 
 **Input**: Feature specification from `specs/004-fix-curso-import/spec.md`
 
 ## Summary
 
-Fix the recurring `ModuleNotFoundError: No module named 'curso'` seen when running
-notebooks and CI. Deliver a minimal packaging + setup change so that `curso` is a
-first-class importable package after `./scripts/setup_env.sh` runs, without modifying
-notebooks.
+Fix `ModuleNotFoundError: No module named 'pkg_resources'` that occurs when running
+chapter 01 notebook. The error is triggered by `pandas_ta` 0.3.14b which uses
+`pkg_resources` at import time, but the current venv installs `setuptools>=82` which
+no longer ships `pkg_resources`. The fix pins `setuptools<72` and removes the unreliable
+shim workaround. The editable install (`pip install -e .`) for `curso` importability
+remains in place from previous iteration.
 
 ## Technical Context
 
-**Language/Version**: Python 3.11 (CI uses 3.11)
+**Language/Version**: Python 3.12 (local), Python 3.11 (CI)
 
-**Primary Dependencies**: None new (packaging via `setuptools`, `wheel` are used at build time)
+**Primary Dependencies**: `pandas_ta==0.3.14b` (requires `pkg_resources`), `setuptools<72`
 
 **Storage**: N/A
 
-**Testing**: Existing CI smoke test (`.github/workflows/ci-notebook-smoke.yml`) and install-check (`ci-install-check.yml`) will validate the fix.
+**Testing**: Existing CI smoke test (`.github/workflows/ci-notebook-smoke.yml`) and install-check (`ci-install-check.yml`)
 
 **Target Platform**: macOS, Linux (dev + CI)
 
 **Project Type**: Packaging / environment setup (no application code changes)
 
-**Performance Goals**: Keep setup time impact minimal; editable install acceptable.
+**Performance Goals**: Keep setup time impact minimal.
 
-**Constraints**: Must work with current `scripts/setup_env.sh` flow and Python 3.11.
+**Constraints**: Must work with `scripts/setup_env.sh` flow, Python 3.11+/3.12.
+
+**Scale/Scope**: Single dependency version constraint fix.
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- Spec-First Delivery: `spec.md` defines the bug, acceptance tests, and measurable outcomes.
-- Independent Value Slices: The fix is a single slice (packaging/install change) that yields immediate value.
-- Verifiable Outcomes: Acceptance scenarios are reproducible locally and in CI.
-- Traceable Artifacts: Changes touch `setup_env.sh`, add packaging metadata (`pyproject.toml`, `setup.cfg`), and update docs.
-- Minimal, Explicit Change: The plan prefers an editable install to avoid editing many notebooks.
+- **Spec-First Delivery**: ✅ `spec.md` defines the bug, acceptance tests, and measurable outcomes.
+- **Independent Value Slices**: ✅ Single slice (setuptools pin) yields immediate value.
+- **Verifiable Outcomes**: ✅ Acceptance scenarios are reproducible locally and in CI.
+- **Traceable Artifacts**: ✅ Changes touch `setup_env.sh`, `curso/requirements.txt`, and docs.
+- **Minimal, Explicit Change**: ✅ Pin a dependency version rather than patching libraries or editing notebooks.
 
 ## Project Structure (changes for this feature)
 
 ```text
 specs/004-fix-curso-import/
-├── plan.md
-├── research.md
-├── data-model.md
-├── quickstart.md
-└── contracts/
-
-# Repository changes
-pyproject.toml       # build-system for packaging
-setup.cfg            # setuptools config to find `curso` package
-scripts/setup_env.sh # updated to `pip install -e .` during venv setup
+├── plan.md              # This file
+├── research.md          # Phase 0 output
+├── data-model.md        # Phase 1 output
+├── quickstart.md        # Phase 1 output
+├── contracts/
+│   └── installation.md  # Phase 1 output
+└── tasks.md             # Phase 2 output (NOT created by /speckit.plan)
 ```
 
-**Structure Decision**: Create packaging metadata at repo root and ensure setup script installs the project in editable mode inside the created venv.
+### Source Code (repository root changes)
+
+```text
+curso/requirements.txt     # Add setuptools<72
+scripts/setup_env.sh       # Pin setuptools<72 in upgrade step; remove shim
+pyproject.toml             # Already present (no change)
+setup.cfg                  # Already present (no change)
+```
 
 ## Complexity Tracking
 
-No constitution violations detected. The change is focused and reversable (only packaging metadata + small setup script change).
+No constitution violations detected. The change is a single dependency version pin + script cleanup.
 
 ## Phase 0: Research
 
-Create `research.md` summarizing options (editable install vs PYTHONPATH vs notebook edits) and decision to prefer editable install via `pip install -e .`.
+See [research.md](research.md). Key finding: `setuptools>=78` removed `pkg_resources` as a
+standalone module. `pandas_ta` 0.3.14b still depends on it. Pin `setuptools<72` resolves the issue.
 
 ## Phase 1: Design & Contracts
 
-- `data-model.md`: Entity definitions (package `curso`, setup script behavior)
-- `contracts/installation.md`: Installation & verification contract (what success looks like)
-- `quickstart.md`: Verify steps to run `./scripts/setup_env.sh` and confirm `python -c "import curso"` works
+- [data-model.md](data-model.md): Entity definitions (package, setup script, dependency constraint)
+- [contracts/installation.md](contracts/installation.md): Installation & verification contract
+- [quickstart.md](quickstart.md): Steps to verify the fix
 
 ## Phase 2: Implementation
 
-1. Add `pyproject.toml` and `setup.cfg` to make the repository installable (package name `robots-curso`, packages=find: to include `curso`).
-2. Update `scripts/setup_env.sh` to run `pip install -e .` inside the venv after installing requirements.
-3. Update CI (`.github/workflows/ci-install-check.yml`) to include a `import curso` check (if not already covered).
-4. Run smoke tests (existing `ci-notebook-smoke.yml`) locally in a fresh venv.
-5. Update documentation (`specs/004-fix-curso-import/quickstart.md` and main quickstart) with verification steps.
+1. Update `curso/requirements.txt`: add `setuptools<72`.
+2. Update `scripts/setup_env.sh`: change `pip install --upgrade pip setuptools wheel` to `pip install --upgrade pip "setuptools<72" wheel`.
+3. Remove the `pkg_resources` shim workaround from `setup_env.sh`.
+4. Verify locally: recreate venv and confirm `from curso.lib.indicators import sma` works.
+5. Run chapter 01 notebook to confirm no `ModuleNotFoundError`.
 
 ## Done Criteria
 
-- All design artifacts created: `research.md`, `data-model.md`, `contracts/installation.md`, `quickstart.md`.
-- `scripts/setup_env.sh` updated and `pyproject.toml` + `setup.cfg` added and committed.
-- Local validation: `./scripts/setup_env.sh` then `python -c "import curso"` returns OK.
-- CI validation: `ci-install-check.yml` and `ci-notebook-smoke.yml` pass in the PR for this branch.
+- All design artifacts updated: `research.md`, `data-model.md`, `contracts/installation.md`, `quickstart.md`.
+- `setuptools<72` pinned in `curso/requirements.txt` and `scripts/setup_env.sh`.
+- `pkg_resources` shim removed from `setup_env.sh`.
+- Local validation: fresh venv with `./scripts/setup_env.sh` then `python -c "from curso.lib.indicators import sma; print('OK')"` returns OK.
+- CI validation: `ci-install-check.yml` and `ci-notebook-smoke.yml` pass.

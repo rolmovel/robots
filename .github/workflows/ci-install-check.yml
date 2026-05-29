@@ -24,8 +24,9 @@ jobs:
         run: |
           python -m venv .venv
           . .venv/bin/activate
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade pip "setuptools<72" wheel
           pip install -r curso/requirements.txt
+          pip install -e .
       - name: Verify imports
         run: |
           . .venv/bin/activate
