@@ -26,6 +26,10 @@ fi
 
 echo "Environment setup complete. To activate: source $VENV_DIR/bin/activate"
 
+# Install the repository in editable mode so `curso` is importable
+echo "Installing repository in editable mode (pip install -e .)"
+pip install -e .
+
 # Ensure pkg_resources is importable (some python environments vendor it under pip)
 python - <<'PY'
 try:
