@@ -78,10 +78,25 @@ def bollinger_bands(
     """
     Bollinger Bands.
 
+    Args:
+        df: DataFrame con columna de precios.
+        length: Período de la media. Default: 20.
+        std: Número de desviaciones estándar. Default: 2.0.
+        column: Columna sobre la que calcular. Default: "Close".
+
     Returns:
-        DataFrame con columnas: BB_Lower, BB_Mid, BB_Upper, BB_Bandwidth, BB_Percent.
+        DataFrame con columnas: lower, middle, upper, bandwidth, percent.
+
+    Raises:
+        KeyError: Si la columna ``column`` no existe en ``df``.
     """
+    if column not in df.columns:
+        raise KeyError(
+            f"La columna '{column}' no existe en el DataFrame. "
+            f"Columnas disponibles: {list(df.columns)}"
+        )
     result = ta.bbands(df[column], length=length, std=std)
+    result.columns = ["lower", "middle", "upper", "bandwidth", "percent"]
     return result
 
 
