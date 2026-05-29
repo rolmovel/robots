@@ -9,7 +9,8 @@ description: "Task list template for feature implementation"
 
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**Tests**: The examples below include test tasks. Automated tests are OPTIONAL unless requested,
+but each user story MUST include a reproducible validation task.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -246,6 +247,7 @@ With multiple developers:
 - [P] tasks = different files, no dependencies
 - [Story] label maps task to specific user story for traceability
 - Each user story should be independently completable and testable
+- Include at least one validation task per user story (automated or manual)
 - Verify tests fail before implementing
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently

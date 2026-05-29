@@ -40,7 +40,12 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Spec-First Delivery: `spec.md` includes prioritized stories, requirements, assumptions,
+  edge cases, and measurable outcomes.
+- Independent Value Slices: User stories are independently implementable and testable.
+- Verifiable Outcomes: Each story has acceptance scenarios and a reproducible validation method.
+- Traceable Artifacts: Planned work maps directly to stories and target file paths.
+- Minimal, Explicit Change: Added complexity includes documented rationale in this plan.
 
 ## Project Structure
 
