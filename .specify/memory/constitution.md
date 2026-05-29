@@ -1,50 +1,100 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: N/A (template) -> 1.0.0
+- Modified principles:
+	- Template Principle 1 -> I. Spec-First Delivery
+	- Template Principle 2 -> II. Independent Value Slices
+	- Template Principle 3 -> III. Verifiable Outcomes
+	- Template Principle 4 -> IV. Traceable Artifacts
+	- Template Principle 5 -> V. Minimal, Explicit Change
+- Added sections:
+	- Operational Constraints
+	- Delivery Workflow & Quality Gates
+- Removed sections:
+	- None
+- Templates requiring updates:
+	- ✅ updated: .specify/templates/plan-template.md
+	- ✅ updated: .specify/templates/spec-template.md
+	- ✅ updated: .specify/templates/tasks-template.md
+	- ✅ verified (no change needed): .specify/extensions/git/commands/speckit.git.commit.md
+	- ✅ verified (no change needed): .specify/extensions/git/commands/speckit.git.feature.md
+	- ✅ verified (no change needed): .specify/extensions/git/commands/speckit.git.initialize.md
+	- ✅ verified (no change needed): .specify/extensions/git/commands/speckit.git.remote.md
+	- ✅ verified (no change needed): .specify/extensions/git/commands/speckit.git.validate.md
+	- ✅ verified (path not present): .specify/templates/commands/*.md
+- Deferred TODOs:
+	- TODO(RATIFICATION_DATE): Original adoption date is unknown; set on first confirmed governance approval.
+-->
+
+# SDD Project Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Spec-First Delivery
+Every feature MUST start from a written specification in `spec.md` before implementation
+tasks are executed. The specification MUST define prioritized user stories, functional
+requirements, edge cases, assumptions, and measurable outcomes.
+Rationale: Shared intent reduces rework and keeps implementation aligned with user value.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Independent Value Slices
+Work MUST be organized as independently deliverable user stories (P1, P2, P3...). Each
+story MUST be implementable and demonstrable on its own without requiring unfinished
+lower-priority stories.
+Rationale: Independent slices enable incremental delivery and lower integration risk.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Verifiable Outcomes
+Each user story MUST include an explicit independent test method and clear acceptance
+scenarios using Given/When/Then behavior statements. Validation MAY be automated,
+manual, or mixed, but MUST be reproducible by another contributor.
+Rationale: Reproducible verification is required for objective completion decisions.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Traceable Artifacts
+Plan, tasks, and implementation outputs MUST remain traceable to the originating
+specification. Task descriptions MUST include concrete file paths, and each major
+decision MUST be documented in the related design artifact.
+Rationale: Traceability preserves context and supports fast, reliable review.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Minimal, Explicit Change
+Contributors MUST prefer the smallest viable change that satisfies the requirement.
+Complexity, scope expansion, or architectural deviations MUST include a written
+justification in the relevant planning artifact.
+Rationale: Explicit tradeoffs prevent accidental complexity growth over time.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Operational Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Repository conventions in `.github/` and `.specify/` MUST be preserved unless a
+	documented migration plan is approved.
+- Shell and automation guidance MUST remain cross-platform aware when scripts exist for
+	both Bash and PowerShell.
+- Agent and prompt artifacts MUST avoid vendor-exclusive assumptions unless explicitly
+	required by integration manifests.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Delivery Workflow & Quality Gates
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+1. Specification (`/speckit.specify`) MUST be completed before planning.
+2. Planning (`/speckit.plan`) MUST pass Constitution Check gates before task generation.
+3. Tasks (`/speckit.tasks`) MUST be grouped by user story and maintain dependency order.
+4. Implementation (`/speckit.implement`) MUST execute tasks with evidence of verification.
+5. Any exception to these gates MUST be documented with rationale and approver.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes conflicting workflow conventions in this repository.
+Amendments require:
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+1. A documented proposal explaining intent, impact, and migration requirements.
+2. Review by maintainers responsible for `.specify` templates and workflow files.
+3. Synchronization updates for impacted templates, prompts, and command docs.
+
+Versioning policy follows semantic versioning:
+
+- MAJOR: Removes or materially redefines a principle or governance requirement.
+- MINOR: Adds a new principle/section or materially expands existing obligations.
+- PATCH: Clarifies wording, fixes errors, or improves non-semantic guidance.
+
+Compliance review expectations:
+
+- Every planning and review cycle MUST verify alignment with Core Principles.
+- Non-compliant changes MUST include a recorded exception and remediation plan.
+
+**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): Original adoption date unknown. | **Last Amended**: 2026-05-28

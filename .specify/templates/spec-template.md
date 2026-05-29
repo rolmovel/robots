@@ -129,3 +129,12 @@
 - [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
 - [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
 - [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+
+## Constitution Alignment *(mandatory)*
+
+- **Spec-First Delivery**: Confirm this document defines stories, requirements,
+  assumptions, edge cases, and measurable outcomes.
+- **Independent Value Slices**: Confirm each user story is independently deliverable.
+- **Verifiable Outcomes**: Confirm each story includes acceptance scenarios and an
+  independent test method.
+- **Minimal, Explicit Change**: Record any intentional complexity with rationale.
