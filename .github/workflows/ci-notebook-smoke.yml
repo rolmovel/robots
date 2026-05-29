@@ -21,9 +21,10 @@ jobs:
         run: |
           python -m venv .venv
           . .venv/bin/activate
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade pip "setuptools<72" wheel
           pip install -r curso/requirements.txt
           pip install -r curso/requirements-dev.txt
+          pip install -e .
       - name: Execute example notebook
         run: |
           . .venv/bin/activate
