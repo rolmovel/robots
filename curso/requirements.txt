@@ -7,3 +7,5 @@ numpy>=1.24,<2.0
 matplotlib>=3.7,<4.0
 plotly>=5.0,<6.0
 jupyterlab>=4.0,<5.0
+# JupyterLab extensions: MyST Markdown rendering + Mermaid diagrams
+jupyterlab-myst>=2.4
