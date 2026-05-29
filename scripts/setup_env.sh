@@ -30,6 +30,12 @@ echo "Environment setup complete. To activate: source $VENV_DIR/bin/activate"
 echo "Installing repository in editable mode (pip install -e .)"
 pip install -e .
 
+# Ensure ipykernel is available and register the venv as a Jupyter kernel
+echo "Installing ipykernel and registering Jupyter kernel 'robots-curso'"
+python -m pip install ipykernel
+# Use --user so the kernel is available to JupyterLab launched outside the venv
+python -m ipykernel install --user --name robots-curso --display-name "Python (robots-curso)"
+
 # Ensure pkg_resources is importable (some python environments vendor it under pip)
 python - <<'PY'
 try:
