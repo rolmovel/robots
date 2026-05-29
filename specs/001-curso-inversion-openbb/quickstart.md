@@ -2,24 +2,60 @@
 
 ## Prerrequisitos
 
-- Python 3.11+ instalado
-- pip o conda disponible
+- **Python 3.11** (recomendado; la versión 3.12+ no es compatible con todas las dependencias)
+- pip disponible
 - Editor con soporte Jupyter (VS Code con extensión Jupyter o JupyterLab)
 
 ## Setup inicial
 
+La forma más rápida es usar el script de setup incluido:
+
 ```bash
 # Clonar el repositorio
-git clone <repo-url>
-cd sdd-project
+git clone https://github.com/rolmovel/robots
+cd robots
 
-# Crear entorno virtual
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-# .venv\Scripts\activate   # Windows
+# Ejecutar el script de setup (crea venv + instala dependencias)
+chmod +x scripts/setup_env.sh
+./scripts/setup_env.sh python3.11 .venv
 
-# Instalar dependencias
+# Activar el entorno
+source .venv/bin/activate
+```
+
+> **Nota**: Si no tienes Python 3.11 como `python3.11`, puedes usar `pyenv`:
+> ```bash
+> pyenv install 3.11.10
+> pyenv shell 3.11.10
+> ./scripts/setup_env.sh python3 .venv
+> ```
+
+### Setup manual (alternativa)
+
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip setuptools wheel
 pip install -r curso/requirements.txt
+```
+
+### Nota sobre `pkg_resources`
+
+`pandas-ta 0.3.14b` depende de `pkg_resources`, que ya no se incluye por
+defecto en versiones recientes de `setuptools`. El script `setup_env.sh`
+crea automáticamente un shim si detecta que falta. Si haces la instalación
+manual y `import pandas_ta` falla con *"No module named pkg_resources"*,
+ejecuta:
+
+```bash
+python -c "
+import os, sys
+sp = next(p for p in sys.path if p.endswith('site-packages'))
+os.makedirs(os.path.join(sp,'pkg_resources'), exist_ok=True)
+with open(os.path.join(sp,'pkg_resources','__init__.py'),'w') as f:
+    f.write('from pip._vendor.pkg_resources import *\\n')
+print('shim created')
+"
 ```
 
 ## Verificar instalación

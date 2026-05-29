@@ -1,8 +1,9 @@
-openbb>=4.0
-backtesting>=0.3.3
-pandas-ta>=0.3.14
-pandas>=2.0
-numpy>=1.24
-matplotlib>=3.7
-plotly>=5.0
-jupyterlab>=4.0
+openbb>=4.0,<5.0
+backtesting==0.3.3
+# pandas-ta 0.3.14b: tarball from official site, compatible with Python 3.11
+pandas-ta @ https://www.pandas-ta.dev/assets/zip/pandas_ta-0.3.14b.tar.gz
+pandas>=2.0,<3.0
+numpy>=1.24,<2.0
+matplotlib>=3.7,<4.0
+plotly>=5.0,<6.0
+jupyterlab>=4.0,<5.0
