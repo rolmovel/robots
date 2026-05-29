@@ -106,3 +106,32 @@ las instrucciones para familiarizarte con OpenBB y la descarga de datos.
 - [OpenBB Docs](https://docs.openbb.co/python/reference)
 - [backtesting.py Docs](https://kernc.github.io/backtesting.py/doc/backtesting/)
 - [pandas-ta Docs](https://github.com/twopirllc/pandas-ta)
+
+## Extensiones de JupyterLab: Markdown y Mermaid
+
+El entorno incluye `jupyterlab-myst`, que proporciona:
+
+- **Markdown avanzado (MyST/GFM)**: tablas, admonitions, task lists, tabs, cards, frontmatter
+- **Diagramas Mermaid**: bloques ````mermaid` se renderizan como SVG automáticamente
+
+### Verificar extensión activa
+
+```bash
+source .venv/bin/activate
+jupyter labextension list 2>&1 | grep "jupyterlab-myst"
+# Debe mostrar: jupyterlab-myst v2.x.x enabled OK
+```
+
+### Uso de Mermaid en celdas Markdown
+
+En JupyterLab, crea una celda Markdown con:
+
+````markdown
+```mermaid
+graph LR
+    A[Datos] --> B[Análisis]
+    B --> C[Visualización]
+```
+````
+
+Al renderizar la celda, se mostrará un diagrama SVG interactivo.
