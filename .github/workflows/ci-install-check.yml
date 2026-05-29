@@ -38,6 +38,7 @@ names = [
     'matplotlib',
     'plotly',
     'jupyterlab_myst',
+  'curso',
 ]
 failed = []
 for n in names:
