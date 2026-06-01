@@ -7,3 +7,8 @@ Módulos disponibles:
 - backtest: Helpers para ejecutar backtesting.py y extraer métricas
 - reporting: Visualizaciones estándar (equity curve, drawdown, tablas)
 """
+
+from curso.lib.data import download_historical
+from curso.lib import data, indicators, backtest, reporting
+
+__all__ = ["download_historical", "data", "indicators", "backtest", "reporting"]
