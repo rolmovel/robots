@@ -13,3 +13,7 @@ jupyterlab>=4.0,<5.0
 jupyterlab-myst>=2.4
 # Parquet support for pandas
 pyarrow>=14.0
+scipy>=1.11,<2.0
+
+# Notebook execution/runtime helpers
+nbconvert>=7.0
