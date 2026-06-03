@@ -1,3 +1,5 @@
+# sdd-project
+
 # Robots — Curso de Trading Algorítmico
 
 ## Requisitos previos
