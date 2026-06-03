@@ -1,17 +1,56 @@
 # sdd-project
 
-Se añadió el módulo `curso.lib.signals` que provee una API pluggable para calcular señales basadas en indicadores técnicos.
+# Robots — Curso de Trading Algorítmico
 
-Quickstart
+## Requisitos previos
 
-```python
-from curso.lib.signals import calculate_signals
-import pandas as pd
+- Python 3.11 (recomendado vía [pyenv](https://github.com/pyenv/pyenv))
+- Git
 
-df = pd.DataFrame(...)  # DataFrame con columnas ['open','high','low','close','volume']
-config = {'strategy_type': 'baseline', 'params': {'long_sma': 200, 'short_sma': 50}}
-result = calculate_signals(df, config)
-print(result['recommendation'], result['diagnostics'])
+## Instalación rápida (automática)
+
+Un solo comando configura el entorno virtual, instala dependencias, registra el
+kernel de Jupyter y deja la librería `curso` lista para importar:
+
+```bash
+./scripts/setup_env.sh python3.11 .venv
 ```
 
-Más detalles en `specs/012-calculo-indicadores-historia/quickstart.md` y `specs/012-calculo-indicadores-historia/spec.md`.
+Después, activa el entorno e inicia JupyterLab:
+
+```bash
+source .venv/bin/activate
+jupyter lab
+```
+
+> **Nota:** El script registra automáticamente un kernel llamado
+> "Python (robots-curso)". Los notebooks del curso ya están configurados para
+> usarlo. Si abres un notebook y no ves ese kernel, reinicia JupyterLab.
+
+## Verificación
+
+```bash
+source .venv/bin/activate
+python -c "from curso.lib.data import download_historical; print('OK')"
+```
+
+## Estructura del proyecto
+
+```
+curso/                  # Paquete Python con librería y notebooks del curso
+  lib/                  # Módulos reutilizables (data, indicators, backtest…)
+  capitulo-00-…/        # Capítulos con notebooks
+  requirements.txt      # Dependencias de producción
+  requirements-dev.txt  # Dependencias de desarrollo
+scripts/
+  setup_env.sh          # Script de instalación automática
+specs/                  # Especificaciones de features (Spec Kit)
+```
+
+## Solución de problemas
+
+| Problema | Solución |
+|----------|----------|
+| `ModuleNotFoundError: No module named 'curso'` | Ejecuta `pip install -e .` en la raíz del repo con el venv activo |
+| Error de parquet / pyarrow | Ejecuta `pip install pyarrow` |
+| Kernel no aparece en JupyterLab | Ejecuta `python -m ipykernel install --user --name robots-curso --display-name "Python (robots-curso)"` |
