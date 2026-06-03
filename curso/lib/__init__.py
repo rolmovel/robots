@@ -9,6 +9,20 @@ Módulos disponibles:
 """
 
 from curso.lib.data import download_historical
-from curso.lib import data, indicators, backtest, reporting
+from curso.lib import data, backtest, reporting, signals
 
-__all__ = ["download_historical", "data", "indicators", "backtest", "reporting"]
+# indicators may require optional dependencies (pandas_ta). Import lazily and
+# tolerate ImportError so that modules that don't need indicators can still be used.
+try:
+	from curso.lib import indicators
+except Exception:  # pragma: no cover - optional dependency
+	indicators = None
+
+__all__ = [
+	"download_historical",
+	"data",
+	"indicators",
+	"backtest",
+	"reporting",
+	"signals",
+]
